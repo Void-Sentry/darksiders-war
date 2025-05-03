@@ -1,0 +1,30 @@
+services:
+  war:
+    build:
+      args:
+        ENVIRONMENT: dev
+        PORT: 5000
+        USER: war
+        GROUP: darksiders
+      context: .
+      dockerfile: Dockerfile
+    container_name: war
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - warnet
+      - busnet
+      - cachenet
+      - dbnet
+    secrets:
+      - source: db_ca_crt
+        target: ca.crt
+      - source: db_client_root_key
+        target: client.root.key
+      - source: db_client_root_crt
+        target: client.root.crt
+
+networks:
+  warnet:
+    driver: bridge
